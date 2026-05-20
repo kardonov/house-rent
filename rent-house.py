@@ -276,10 +276,10 @@ elif page == "📊 Eksplorasi Data":
 
     # KPI row
     k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Rata-rata Rent", f"₹{df['Rent'].mean():,.0f}")
-    k2.metric("Median Rent", f"₹{df['Rent'].median():,.0f}")
-    k3.metric("Maks Rent", f"₹{df['Rent'].max():,.0f}")
-    k4.metric("Min Rent", f"₹{df['Rent'].min():,.0f}")
+    k1.metric("Rata-rata Rent", f"Rp{df['Rent'].mean():,.0f}")
+    k2.metric("Median Rent", f"Rp{df['Rent'].median():,.0f}")
+    k3.metric("Maks Rent", f"Rp{df['Rent'].max():,.0f}")
+    k4.metric("Min Rent", f"Rp{df['Rent'].min():,.0f}")
 
     st.divider()
     tab1, tab2, tab3, tab4 = st.tabs(["🏙️ Kota", "🛏️ BHK & Ukuran", "🪑 Furnitur & Penyewa", "🔢 Distribusi"])
@@ -382,7 +382,7 @@ elif page == "🤖 Performa Model":
 
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("R² Score", f"{r2:.4f}")
-    k2.metric("RMSE", f"₹{rmse:,.0f}")
+    k2.metric("RMSE", f"{rmse:,.0f}")
     k3.metric("Model", "Random Forest")
     k4.metric("n_estimators", "150")
 
@@ -393,7 +393,7 @@ elif page == "🤖 Performa Model":
         # Actual vs Predicted scatter
         y_test_arr = np.array(y_test)
         fig = px.scatter(x=y_test_arr, y=y_pred,
-                         labels={"x": "Harga Aktual (₹)", "y": "Harga Prediksi (₹)"},
+                         labels={"x": "Harga Aktual (Rp)", "y": "Harga Prediksi (Rp)"},
                          title="Aktual vs Prediksi",
                          opacity=0.5, color_discrete_sequence=["#667eea"])
         lim = [min(y_test_arr.min(), y_pred.min()), max(y_test_arr.max(), y_pred.max())]
@@ -406,7 +406,7 @@ elif page == "🤖 Performa Model":
         residuals = y_pred - y_test_arr
         fig2 = px.histogram(x=residuals, nbins=60,
                             color_discrete_sequence=["#764ba2"],
-                            labels={"x": "Residual (₹)"},
+                            labels={"x": "Residual (Rp)"},
                             title="Distribusi Residual (Prediksi − Aktual)")
         fig2.add_vline(x=0, line_dash="dash", line_color="red")
         fig2.update_layout(height=350)
