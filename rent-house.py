@@ -41,7 +41,7 @@ st.markdown("""
         border-radius: 16px;
         padding: 30px;
         text-align: center;
-        color: blue;
+        color: lightblue;
         box-shadow: 0 8px 32px rgba(102,126,234,0.4);
     }
     .predict-price {
@@ -67,7 +67,7 @@ st.markdown("""
 
 # ── Load & Preprocess Data ────────────────────────────────────────────────────
 @st.cache_data
-def load_and_preprocess(csv_path: str = "House_Rent_Dataset_Indonesia_Rupiah.csv"):
+def load_and_preprocess(csv_path: str = "House_Rent_Dataset_Indonesia.csv"):
     """
     Load dataset asli jika CSV tersedia, fallback ke data sintetik.
     """
@@ -90,14 +90,14 @@ def load_and_preprocess(csv_path: str = "House_Rent_Dataset_Indonesia_Rupiah.csv
 
         # Fitur musiman dari kolom tanggal
         df["Posted On"] = pd.to_datetime(df["Posted On"], errors="coerce")
-        months = ["Posted On"].dt.month.fillna(6).astype(int)
+        months = df["Posted On"].dt.month.fillna(6).astype(int)
         df["month_sin"] = np.sin(2 * np.pi * months / 12)
         df["month_cos"] = np.cos(2 * np.pi * months / 12)
 
         # Hapus baris dengan nilai penting yang kosong
         required_cols = ["BHK", "Rent", "Size", "City", "Furnishing Status",
                          "Tenant Preferred", "Bathroom", "Point of Contact",
-                         "Area Type", "Area Locality", "Floor", "Total Floors"]
+                         "Area Type", "Floor", "Total Floors"]
         df = df.dropna(subset=required_cols).reset_index(drop=True)
 
         st.sidebar.success("✅ Dataset asli dimuat")
@@ -109,7 +109,7 @@ def load_and_preprocess(csv_path: str = "House_Rent_Dataset_Indonesia_Rupiah.csv
 
 @st.cache_resource
 def train_model(df):
-    cat_cols = ["Area Type", "Area Locality", "City",
+    cat_cols = ["City",
                 "Furnishing Status", "Tenant Preferred", "Point of Contact"]
     num_cols = ["BHK", "Size", "Bathroom", "Floor", "Total Floors",
                  "month_sin", "month_cos"]
@@ -152,7 +152,7 @@ with st.spinner("🔄 Memuat data & melatih model…"):
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/home.png", width=64)
-    st.title("🏠 Rent Predictor")
+    st.title("Rent Predictor")
     st.caption("Machine Learning · Random Forest")
     st.divider()
     page = st.radio("Navigasi", ["🔮 Prediksi Harga", "📊 Eksplorasi Data", "🤖 Performa Model"])
@@ -187,8 +187,6 @@ if page == "🔮 Prediksi Harga":
 
         c3, c4 = st.columns(2)
         with c3:
-            locality_opts = df[df["City"] == city]["Area Locality"].unique()
-            locality = st.selectbox("Lokasi", sorted(locality_opts))
             tenant = st.selectbox("Preferensi Penyewa", df["Tenant Preferred"].unique())
         with c4:
             total_floors = st.slider("Total Lantai Gedung", 1, 30, 5)
@@ -209,7 +207,6 @@ if page == "🔮 Prediksi Harga":
                 "BHK": bhk, "Size": size, "Bathroom": bathroom,
                 "Floor": floor, "Total Floors": total_floors,
                 "month_sin": month_sin_val, "month_cos": month_cos_val,
-                "Area Type": area_type, "Area Locality": locality,
                 "City": city, "Furnishing Status": furnishing,
                 "Tenant Preferred": tenant, "Point of Contact": contact,
             }])
@@ -242,9 +239,9 @@ if page == "🔮 Prediksi Harga":
                     "axis": {"range": [low * 0.8, high * 1.2]},
                     "bar": {"color": "#667eea"},
                     "steps": [
-                        {"range": [low * 0.8, low], "color": "#e8eaf6"},
-                        {"range": [low, high], "color": "#c5cae9"},
-                        {"range": [high, high * 1.2], "color": "#e8eaf6"},
+                        {"range": [low * 0.8, low], "color": "#243fd6"},
+                        {"range": [low, high], "color": "#B11A8B"},
+                        {"range": [high, high * 1.2], "color": "#a8106e"},
                     ],
                     "threshold": {
                         "line": {"color": "#764ba2", "width": 4},
