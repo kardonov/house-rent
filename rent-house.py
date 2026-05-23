@@ -89,7 +89,7 @@ def load_and_preprocess(csv_path: str = "House_Rent_Dataset_Indonesia_Rupiah.csv
         )
 
         # Fitur musiman dari kolom tanggal
-        df["Posted On"] = pd.to_datetime(["Posted On"], errors="coerce")
+        df["Posted On"] = pd.to_datetime(df["Posted On"], errors="coerce")
         months = ["Posted On"].dt.month.fillna(6).astype(int)
         df["month_sin"] = np.sin(2 * np.pi * months / 12)
         df["month_cos"] = np.cos(2 * np.pi * months / 12)
